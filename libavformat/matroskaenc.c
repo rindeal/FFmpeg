@@ -117,10 +117,6 @@ typedef struct mkv_attachments {
 #define MODE_MATROSKAv2 0x01
 #define MODE_WEBM       0x02
 
-/** Maximum number of tracks allowed in a Matroska file (with track numbers in
- * range 1 to 126 (inclusive) */
-#define MAX_TRACKS 126
-
 typedef struct MatroskaMuxContext {
     const AVClass   *class;
     int             mode;
@@ -2603,13 +2599,6 @@ static int webm_query_codec(enum AVCodecID codec_id, int std_compliance)
 static int mkv_init(struct AVFormatContext *s)
 {
     int i;
-
-    if (s->nb_streams > MAX_TRACKS) {
-        av_log(s, AV_LOG_ERROR,
-               "At most %d streams are supported for muxing in Matroska\n",
-               MAX_TRACKS);
-        return AVERROR(EINVAL);
-    }
 
     for (i = 0; i < s->nb_streams; i++) {
         if (s->streams[i]->codecpar->codec_id == AV_CODEC_ID_ATRAC3 ||
