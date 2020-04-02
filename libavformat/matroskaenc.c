@@ -2793,3 +2793,31 @@ AVOutputFormat ff_matroska_audio_muxer = {
     .priv_class        = &mka_class,
 };
 #endif
+
+#if CONFIG_MATROSKA_SUBTITLE_MUXER
+static const AVClass mks_class = {
+    .class_name = "matroska subtitle muxer",
+    .item_name  = av_default_item_name,
+    .option     = options,
+    .version    = LIBAVUTIL_VERSION_INT,
+};
+AVOutputFormat ff_matroska_subtitle_muxer = {
+    .name              = "matroska",
+    .long_name         = NULL_IF_CONFIG_SMALL("Matroska Subtitles"),
+    .extensions        = "mks",
+    .priv_data_size    = sizeof(MatroskaMuxContext),
+    .subtitle_codec    = AV_CODEC_ID_ASS,
+    .init              = mkv_init,
+    .deinit            = mkv_deinit,
+    .write_header      = mkv_write_header,
+    .write_packet      = mkv_write_flush_packet,
+    .write_trailer     = mkv_write_trailer,
+    .check_bitstream   = mkv_check_bitstream,
+    .flags             = AVFMT_GLOBALHEADER | AVFMT_VARIABLE_FPS |
+                         AVFMT_TS_NONSTRICT | AVFMT_ALLOW_FLUSH,
+    .codec_tag         = (const AVCodecTag* const []){
+        additional_subtitle_tags, 0
+    },
+    .priv_class        = &mks_class,
+};
+#endif
